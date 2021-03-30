@@ -1,0 +1,2 @@
+genome: equCab3
+refBuild: UCSC # choose one: UCSC, RefSeq, Ensemble. Sequence identifiers (eg. chr names) in variant list and ref genome must match
