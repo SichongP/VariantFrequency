@@ -1,4 +1,4 @@
-localrules: getGenomeFASTA, generateRef, generateFASTQLink
+localrules: getGenomeFASTA, generateRef, generateFASTQLink, indexVCF, indexRef
 
 rule getGenomeFASTA:
     output: fa = workDir + "/data/genome.fa", size = workDir + "/data/chrom.sizes"
@@ -22,19 +22,30 @@ rule generateRef:
     output:
         fa = workDir + "/data/regionsRef.fa",
         remapVar = workDir + "/data/remappedVariants.bed",
-        mapping = workDir + "/data/variantMapping.csv"
+        mapping = workDir + "/data/variantMapping.csv",
+        outVCF = workDir + "/data/remappedVariants.vcf"
     conda: workDir + "/envs/python.yaml"
     script: workDir + "/scripts/generateRef.py"
+
+rule indexVCF:
+    input: workDir + "/data/remappedVariants.vcf"
+    output: workDir + "/data/remappedVariants.vcf.idx"
+    params: tool = workDir + "/tools/gatk-4.1.9.0/gatk"
+    shell:
+     """
+     {params.tool} IndexFeatureFile -I data/remappedVariants.vcf
+     """
 
 rule indexRef:
     input: workDir + "/data/regionsRef.fa"
     output: workDir + "/data/regionsRef.fa.fai"
     conda: workDir + "/envs/samtools.yaml"
+    params: tool = workDir + "/tools/gatk-4.1.9.0/gatk"
     shell:
      """
      samtools faidx {input}
      module load java/1.8
-     tools/gatk-4.1.9.0/gatk CreateSequenceDictionary -R {input}
+     {params.tool} CreateSequenceDictionary -R {input}
      """
     
 rule generateFASTQLink:
