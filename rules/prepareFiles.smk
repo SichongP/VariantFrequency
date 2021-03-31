@@ -1,14 +1,5 @@
 localrules: getGenomeFASTA, generateRef, generateFASTQLink
 
-def getLink(wildcards, input):
-    run, read = wildcards.name.split('_')
-    accessions = pd.read_csv(input.Links, header = 0)
-    accessions = accessions[accessions['run_accession'] == run]
-    if read == '1':
-        return accessions['r1_fastq'].iloc[0]
-    else:
-        return accessions['r2_fastq'].iloc[0]
-
 rule getGenomeFASTA:
     output: fa = workDir + "/data/genome.fa", size = workDir + "/data/chrom.sizes"
     params:
@@ -34,6 +25,17 @@ rule generateRef:
         mapping = workDir + "/data/variantMapping.csv"
     conda: workDir + "/envs/python.yaml"
     script: workDir + "/scripts/generateRef.py"
+
+rule indexRef:
+    input: workDir + "/data/regionsRef.fa"
+    output: workDir + "/data/regionsRef.fa.fai"
+    conda: workDir + "/envs/samtools.yaml"
+    shell:
+     """
+     samtools faidx {input}
+     module load java/1.8
+     tools/gatk-4.1.9.0/gatk CreateSequenceDictionary -R {input}
+     """
     
 rule generateFASTQLink:
     input: accession = workDir + "/data/accessions.tsv"
@@ -42,24 +44,23 @@ rule generateFASTQLink:
     script: workDir + "/scripts/getFASTQLinks.py"
     
 rule getFASTQ:
-    input: Links = workDir + "/data/fastqLinks.csv"
-    output: temp(workDir + "/Results/temp_fastq/runs/{name}.fq.gz")
+    output: temp(expand(workDir + "/Results/temp_fastq/runs/{{run}}/{{run}}_{read}.fastq.gz", read = ['1', '2']))
     params:
         partition = getPartition,
-        link = getLink
+        outDir = workDir + "/Results/temp_fastq/runs/"
     resources:
         mem_mb = 3000,
         cpus = 1,
-        time = 120
+        time_min = 120
     shell:
      """
-     wget -O {output} {params.link} 
+     bin/enaBrowserTools-1.6/python3/enaDataGet -f fastq -d {params.outDir} {wildcards.run}
      """
      
 rule mergeFASTQ:
     input:
-        r1 = lambda wildcards: expand(workDir + "/Results/temp_fastq/runs/{run}_1.fq.gz", run = SAMPLES_RUN_DICT[wildcards.sample]),
-        r2 = lambda wildcards: expand(workDir + "/Results/temp_fastq/runs/{run}_2.fq.gz", run = SAMPLES_RUN_DICT[wildcards.sample])
+        r1 = lambda wildcards: expand(workDir + "/Results/temp_fastq/runs/{run}/{run}_1.fastq.gz", run = SAMPLES_RUN_DICT[wildcards.sample]),
+        r2 = lambda wildcards: expand(workDir + "/Results/temp_fastq/runs/{run}/{run}_2.fastq.gz", run = SAMPLES_RUN_DICT[wildcards.sample])
     output:
         r1 = workDir + "/Results/temp_fastq/{sample}_R1.fq",
         r2 = workDir + "/Results/temp_fastq/{sample}_R2.fq"
@@ -67,7 +68,7 @@ rule mergeFASTQ:
     resources:
         mem_mb = 3000,
         cpus = 1,
-        time = 120
+        time_min = 120
     shell:
      """
      zcat {input.r1} > {output.r1}
