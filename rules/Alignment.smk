@@ -23,6 +23,7 @@ rule mapping:
         cpus = 2,
         time_min = 240
     params: partition=getPartition
+    conda: workDir + "/envs/bwa.yaml"
     shell:
      """
      bwa mem -t {resources.cpus} -R "@RG\\tID:{wildcards.sample}\\tSM:{wildcards.sample}\\tLB:{wildcards.sample}\\tPL:illumina" -o {output} {input.fa} {input.r1} {input.r2}
