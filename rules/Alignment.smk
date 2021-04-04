@@ -54,10 +54,15 @@ rule markDuplicate:
     conda: workDir + "/envs/sambamba.yaml"
     shell:
      """
-     MYTMPDIR=/scratch/pengsc/$SLURM_JOBID
-     cleanup() {{ rm -rf $MYTMPDIR; }}
-     trap cleanup EXIT
-     mkdir -p $MYTMPDIR
+     if [ ! -n ${{SLURM_JOBID-}} ]; then
+         MYTMPDIR=/scratch/pengsc/$SLURM_JOBID
+         cleanup() {{ rm -rf $MYTMPDIR; }}
+         trap cleanup EXIT
+         mkdir -p $MYTMPDIR
+     else
+         MYTMPDIR="./temp/"
+         mkdir -p $MYTMPDIR
+     fi
      sambamba markdup -t {resources.cpus} --tmpdir=$MYTMPDIR {input} {output}
      """
 
