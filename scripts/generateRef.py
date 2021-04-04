@@ -49,7 +49,7 @@ vcf_df = clustered[['Chromosome', 'variantStart', 'variantEnd']]
 vcf_df.columns = ['Chromosome', 'Start', 'End']
 ref_alleles = []
 for idx, row in vcf_df.iterrows():
-    seq = pr.get_fasta(pr.PyRanges(pd.DataFrame(row).transpose()), "/home/pengsc/reference/equcab3/UCSC/equCab3.fa")[0]
+    seq = pr.get_fasta(pr.PyRanges(pd.DataFrame(row).transpose()), genomeFa)[0]
     ref_alleles.append(seq.upper())
 clustered['ref'] = ref_alleles
 
