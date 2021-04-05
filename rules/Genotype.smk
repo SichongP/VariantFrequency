@@ -32,5 +32,5 @@ rule genotypeGVCF:
     output: workDir + "/Results/VCF/output.vcf.gz"
     shell:
      """
-     {input.tool} --java-options "-Xmx4g" GenotypeGVCFs -R {input.fa} -V {input.vcf} -L {input.targetVCF} --include-non-variant-sites -O {output}
+     {input.tool} --java-options "-Xmx4g" GenotypeGVCFs -R {input.fa} -V {input.vcf} -L {input.targetVCF} --dbsnp {input.targetVCF} --include-non-variant-sites -O {output}
      """
