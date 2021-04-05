@@ -31,9 +31,8 @@ def getPartition(wildcards, resources):
         
 rule all:
     input:
-        expand(workDir + "/Results/bams/{sample}.markDup.sorted.bam.bai", sample = SAMPLES),
-        workDir + "/data/remappedVariants.vcf.idx",
-        workDir + "/data/regionsRef.fa.fai"
+        workDir + "/Results/VCF/output.vcf.gz"
 
 include: "rules/prepareFiles.smk"
 include: "rules/Alignment.smk"
+include: "rules/Genotype.smk"
