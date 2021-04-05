@@ -31,7 +31,7 @@ rule mapping:
 
 rule filterBAM:
     input: workDir + "/Results/bams/{sample}.sam"
-    output: temp(workDir + "/Results/bams/{sample}.bam")
+    output: temp(workDir + "/Results/bams/{sample}.filtered.bam")
     resources:
         mem_mb = 8000,
         cpus = 1,
@@ -44,7 +44,7 @@ rule filterBAM:
      """
 
 rule markDuplicate:
-    input: workDir + "/Results/bams/{sample}.bam"
+    input: workDir + "/Results/bams/{sample}.filtered.bam"
     output: temp(workDir + "/Results/bams/{sample}.markDup.bam")
     resources:
         mem_mb = 6000,
