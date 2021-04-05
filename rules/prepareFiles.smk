@@ -13,6 +13,16 @@ rule getGenomeFASTA:
          gunzip {output.fa}.gz
      fi
      """
+
+rule getGATK:
+    output: workDir + "/tools/gatk-4.2.0.0/gatk"
+    conda: workDir + "/envs/unzip.yaml"
+    shell:
+     """
+     wget -P tools/ https://github.com/broadinstitute/gatk/releases/download/4.2.0.0/gatk-4.2.0.0.zip
+     unzip tools/gatk-4.2.0.0.zip
+     rm tools/gatk-4.2.0.0.zip
+     """
      
 rule generateRef:
     input:
@@ -28,24 +38,25 @@ rule generateRef:
     script: workDir + "/scripts/generateRef.py"
 
 rule indexVCF:
-    input: workDir + "/data/remappedVariants.vcf"
+    input:
+        vcf = workDir + "/data/remappedVariants.vcf",
+        tool = workDir + "/tools/gatk-4.2.0.0/gatk"
     output: workDir + "/data/remappedVariants.vcf.idx"
-    params: tool = workDir + "/tools/gatk-4.1.9.0/gatk"
     shell:
      """
-     {params.tool} IndexFeatureFile -I data/remappedVariants.vcf
+     {input.tool} IndexFeatureFile -I {input.vcf}
      """
 
 rule indexRef:
-    input: workDir + "/data/regionsRef.fa"
+    input:
+        fa = workDir + "/data/regionsRef.fa",
+        tool = workDir + "/tools/gatk-4.2.0.0/gatk"
     output: workDir + "/data/regionsRef.fa.fai"
     conda: workDir + "/envs/samtools.yaml"
-    params: tool = workDir + "/tools/gatk-4.1.9.0/gatk"
     shell:
      """
-     samtools faidx {input}
-     module load java/1.8
-     {params.tool} CreateSequenceDictionary -R {input}
+     samtools faidx {input.fa}
+     {input.tool} CreateSequenceDictionary -R {input.fa}
      """
     
 rule generateFASTQLink:
