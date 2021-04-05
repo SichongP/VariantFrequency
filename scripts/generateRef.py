@@ -61,10 +61,10 @@ with open(refFa, 'w') as output:
         output.write("{}\n".format(seq))
 
 # Write to output remapped variant list:
-clustered[['Chromosome', 'newVariantStart', 'newVariantEnd', 'Cluster', 'id']].to_csv(remappedVar, sep = '\t', index = False, header = False)
+clustered[['Cluster', 'newVariantStart', 'newVariantEnd', 'Chromosome', 'id']].to_csv(remappedVar, sep = '\t', index = False, header = False)
 
 #Write to output mapping of old and new variant positions
-clustered[['Chromosome', 'variantStart', 'variantEnd', 'newVariantStart', 'newVariantEnd', 'Cluster', 'id']].to_csv(mapping, index = False)
+clustered[['Chromosome', 'variantStart', 'variantEnd', 'Cluster', 'newVariantStart', 'newVariantEnd', 'id']].to_csv(mapping, index = False)
 
 #output to vcf
 with open(vcf, 'w') as output:
