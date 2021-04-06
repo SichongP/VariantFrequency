@@ -20,7 +20,7 @@ rule getGATK:
     shell:
      """
      wget -P tools/ https://github.com/broadinstitute/gatk/releases/download/4.2.0.0/gatk-4.2.0.0.zip
-     unzip tools/gatk-4.2.0.0.zip
+     unzip -d tools/ tools/gatk-4.2.0.0.zip
      rm tools/gatk-4.2.0.0.zip
      """
      
@@ -32,7 +32,7 @@ rule generateRef:
     output:
         fa = workDir + "/data/regionsRef.fa",
         remapVar = workDir + "/data/remappedVariants.bed",
-        mapping = workDir + "/data/variantMapping.csv",
+        mapping = workDir + "/data/variantMapping.txt",
         outVCF = workDir + "/data/remappedVariants.vcf"
     conda: workDir + "/envs/python.yaml"
     script: workDir + "/scripts/generateRef.py"
