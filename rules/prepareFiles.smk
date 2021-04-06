@@ -1,4 +1,4 @@
-localrules: getGenomeFASTA, generateRef, generateFASTQLink, indexVCF, indexRef
+localrules: getGenomeFASTA, generateRef, generateFASTQLink, indexVCF, indexRef, getGATK
 
 rule getGenomeFASTA:
     output: fa = workDir + "/data/genome.fa", size = workDir + "/data/chrom.sizes"
