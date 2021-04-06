@@ -31,7 +31,7 @@ def getPartition(wildcards, resources):
         
 rule all:
     input:
-        workDir + "/Results/VCF/output.vcf.gz"
+        workDir + "/Results/VCF/output.vcf"
 
 include: "rules/prepareFiles.smk"
 include: "rules/Alignment.smk"
