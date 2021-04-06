@@ -3,6 +3,7 @@
 rule HaplotypeCaller:
     input:
         bam = workDir + "/Results/bams/{sample}.markDup.sorted.bam",
+        bai = workDir + "/Results/bams/{sample}.markDup.sorted.bam.bai",
         fa = workDir + "/data/regionsRef.fa",
         tool = workDir + "/tools/gatk-4.2.0.0/gatk"
     output: workDir + "/Results/GVCFs/{sample}.g.vcf.gz"
@@ -29,8 +30,9 @@ rule genotypeGVCF:
         fa = workDir + "/data/regionsRef.fa",
         targetVCF = workDir + "/data/remappedVariants.vcf",
         tool = workDir + "/tools/gatk-4.2.0.0/gatk"
-    output: workDir + "/Results/VCF/output.vcf.gz"
+    output: workDir + "/Results/VCF/output.vcf"
     shell:
      """
-     {input.tool} --java-options "-Xmx4g" GenotypeGVCFs -R {input.fa} -V {input.vcf} -L {input.targetVCF} --dbsnp {input.targetVCF} --include-non-variant-sites -O {output}
+     {input.tool} --java-options "-Xmx4g" GenotypeGVCFs -R {input.fa} -V {input.vcf} -L {input.targetVCF} --dbsnp {input.targetVCF} --include-non-variant-sites -O {output}.gz
+     gunzip {output}.gz
      """
