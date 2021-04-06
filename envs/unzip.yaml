@@ -1,0 +1,8 @@
+name: unzip
+channels:
+  - defaults
+dependencies:
+  - _libgcc_mutex=0.1=main
+  - libgcc-ng=9.1.0=hdf63c60_0
+  - unzip=6.0=h611a1e1_0
+prefix: /home/sichong/miniconda3/envs/unzip
