@@ -4,7 +4,7 @@ rule indexFASTA:
     conda: workDir + "/envs/bwa.yaml"
     params: partition = getPartition
     resources:
-        mem_mb = 6000,
+        mem_mb = 4000,
         cpus = 1,
         time_min = 30
     shell:
@@ -33,7 +33,7 @@ rule filterBAM:
     input: workDir + "/Results/bams/{sample}.sam"
     output: temp(workDir + "/Results/bams/{sample}.filtered.bam")
     resources:
-        mem_mb = 8000,
+        mem_mb = 4000,
         cpus = 1,
         time_min = 240
     params: partition=getPartition
@@ -47,7 +47,7 @@ rule markDuplicate:
     input: workDir + "/Results/bams/{sample}.filtered.bam"
     output: temp(workDir + "/Results/bams/{sample}.markDup.bam")
     resources:
-        mem_mb = 6000,
+        mem_mb = 4000,
         cpus = 1,
         time_min = 200
     params: partition = getPartition
@@ -70,7 +70,7 @@ rule sortBAM:
     input: workDir + "/Results/bams/{sample}.markDup.bam"
     output: workDir + "/Results/bams/{sample}.markDup.sorted.bam"
     resources:
-        mem_mb = 8000,
+        mem_mb = 4000,
         cpus = 1,
         time_min = 240
     params: partition=getPartition

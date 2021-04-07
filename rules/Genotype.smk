@@ -9,12 +9,12 @@ rule HaplotypeCaller:
     output: workDir + "/Results/GVCFs/{sample}.g.vcf.gz"
     params: partition = getPartition
     resources:
-        mem_mb = 5000,
+        mem_mb = 4000,
         cpus = 1,
         time_min = 120
     shell:
      """
-     {input.tool} --java-options "-Xmx4g" HaplotypeCaller -R {input.fa} -I {input.bam} -O {output} -ERC GVCF
+     {input.tool} --java-options "-Xmx3g" HaplotypeCaller -R {input.fa} -I {input.bam} -O {output} -ERC GVCF
      """
 
 rule combineGVCF:
@@ -46,11 +46,11 @@ rule genotypeGVCF:
     output: workDir + "/Results/VCF/output.vcf"
     params: partition = getPartition
     resources:
-        mem_mb = 6000,
+        mem_mb = 4000,
         cpus = 1,
         time_min = 240
     shell:
      """
-     {input.tool} --java-options "-Xmx4g" GenotypeGVCFs -R {input.fa} -V {input.vcf} -L {input.targetVCF} --dbsnp {input.targetVCF} --include-non-variant-sites -O {output}.gz
+     {input.tool} --java-options "-Xmx3g" GenotypeGVCFs -R {input.fa} -V {input.vcf} -L {input.targetVCF} --dbsnp {input.targetVCF} --include-non-variant-sites -O {output}.gz
      gunzip {output}.gz
      """
