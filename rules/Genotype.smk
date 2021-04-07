@@ -5,6 +5,8 @@ rule HaplotypeCaller:
         bam = workDir + "/Results/bams/{sample}.markDup.sorted.bam",
         bai = workDir + "/Results/bams/{sample}.markDup.sorted.bam.bai",
         fa = workDir + "/data/regionsRef.fa",
+        fai = workDir + "/data/regionsRef.fa.fai",
+        dict = workDir + "/data/regionsRef.dict,"
         tool = workDir + "/tools/gatk-4.2.0.0/gatk"
     output: workDir + "/Results/GVCFs/{sample}.g.vcf.gz"
     params: partition = getPartition
