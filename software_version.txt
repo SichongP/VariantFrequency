@@ -1,0 +1,10 @@
+  - bwa=0.7.17
+  - samtools=1.9
+  - matplotlib=3.3.4
+  - numpy=1.20.1
+  - pandas=1.2.3
+  - pyranges=0.0.95
+  - python=3.9.2
+  - snakemake=6.0.5
+  - sambamba=0.7.1
+  - unzip=6.0
