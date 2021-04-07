@@ -68,7 +68,7 @@ rule markDuplicate:
 
 rule sortBAM:
     input: workDir + "/Results/bams/{sample}.markDup.bam"
-    output: workDir + "/Results/bams/{sample}.markDup.sorted.bam"
+    output: temp(workDir + "/Results/bams/{sample}.markDup.sorted.bam")
     resources:
         mem_mb = 4000,
         cpus = 1,
@@ -82,7 +82,7 @@ rule sortBAM:
 
 rule indexBAM:
     input: workDir + "/Results/bams/{sample}.markDup.sorted.bam"
-    output: workDir + "/Results/bams/{sample}.markDup.sorted.bam.bai"
+    output: temp(workDir + "/Results/bams/{sample}.markDup.sorted.bam.bai")
     resources:
         mem_mb = 4000,
         cpus = 1,

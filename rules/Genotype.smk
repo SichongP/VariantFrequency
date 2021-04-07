@@ -8,7 +8,7 @@ rule HaplotypeCaller:
         fai = workDir + "/data/regionsRef.fa.fai",
         dict = workDir + "/data/regionsRef.dict",
         tool = workDir + "/tools/gatk-4.2.0.0/gatk"
-    output: workDir + "/Results/GVCFs/{sample}.g.vcf.gz"
+    output: temp(workDir + "/Results/GVCFs/{sample}.g.vcf.gz")
     params: partition = getPartition
     resources:
         mem_mb = 4000,
@@ -24,7 +24,7 @@ rule combineGVCF:
         gvcf = expand(workDir + "/Results/GVCFs/{sample}.g.vcf.gz", sample = SAMPLES) ,
         fa = workDir + "/data/regionsRef.fa",
         tool = workDir + "/tools/gatk-4.2.0.0/gatk"
-    output: workDir + "/Results/GVCFs/combined.g.vcf.gz"
+    output: temp(workDir + "/Results/GVCFs/combined.g.vcf.gz")
     params:
         inputGVCF = lambda wildcards, input: ["-V " + file for file in input['gvcf']],
         partition = getPartition
@@ -44,7 +44,8 @@ rule genotypeGVCF:
         vcf = workDir + "/Results/GVCFs/combined.g.vcf.gz",
         fa = workDir + "/data/regionsRef.fa",
         targetVCF = workDir + "/data/remappedVariants.vcf",
-        tool = workDir + "/tools/gatk-4.2.0.0/gatk"
+        tool = workDir + "/tools/gatk-4.2.0.0/gatk",
+        vcf_index = workDir + "/data/remappedVariants.vcf.idx"
     output: workDir + "/Results/VCF/output.vcf"
     params: partition = getPartition
     resources:

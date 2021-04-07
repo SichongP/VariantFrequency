@@ -51,7 +51,9 @@ rule indexRef:
     input:
         fa = workDir + "/data/regionsRef.fa",
         tool = workDir + "/tools/gatk-4.2.0.0/gatk"
-    output: workDir + "/data/regionsRef.fa.fai"
+    output: 
+        fai = workDir + "/data/regionsRef.fa.fai",
+        dict = workDir + "/data/regionsRef.dict"
     conda: workDir + "/envs/samtools.yaml"
     shell:
      """
@@ -73,7 +75,8 @@ rule getFASTQ:
     resources:
         mem_mb = 3000,
         cpus = 1,
-        time_min = 120
+        time_min = 120,
+        download = 1
     shell:
      """
      bin/enaBrowserTools-1.6/python3/enaDataGet -f fastq -d {params.outDir} {wildcards.run}
@@ -84,8 +87,8 @@ rule mergeFASTQ:
         r1 = lambda wildcards: expand(workDir + "/Results/temp_fastq/runs/{run}/{run}_1.fastq.gz", run = SAMPLES_RUN_DICT[wildcards.sample]),
         r2 = lambda wildcards: expand(workDir + "/Results/temp_fastq/runs/{run}/{run}_2.fastq.gz", run = SAMPLES_RUN_DICT[wildcards.sample])
     output:
-        r1 = workDir + "/Results/temp_fastq/{sample}_R1.fq",
-        r2 = workDir + "/Results/temp_fastq/{sample}_R2.fq"
+        r1 = temp(workDir + "/Results/temp_fastq/{sample}_R1.fq"),
+        r2 = temp(workDir + "/Results/temp_fastq/{sample}_R2.fq")
     params: partition = getPartition,
     resources:
         mem_mb = 3000,
