@@ -20,6 +20,10 @@ bash Miniconda3-latest-Linux-x86_64.sh
 
 Log out and log back in again to activate the base conda environment.
 
+Install Snakemake, Python3, and Pandas into base environment:
+```
+conda install -c conda-forge -c bioconda snakemake python=3.9 pandas
+```
 
 ### Adjust configurations
 
