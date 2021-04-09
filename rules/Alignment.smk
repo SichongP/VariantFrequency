@@ -21,7 +21,9 @@ rule mapping:
     resources:
         mem_mb = 8000,
         cpus = 2,
-        time_min = 640
+        cpus_med = 2,
+        mem_mb_med = 8000,
+        time_min = 1240
     params: partition=getPartition
     conda: workDir + "/envs/bwa.yaml"
     shell:
