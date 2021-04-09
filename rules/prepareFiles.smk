@@ -75,7 +75,7 @@ rule getFASTQ:
     resources:
         mem_mb = 3000,
         cpus = 1,
-        time_min = 300,
+        time_min = 600,
         download = 1
     shell:
      """
@@ -93,7 +93,7 @@ rule mergeFASTQ:
     resources:
         mem_mb = 3000,
         cpus = 1,
-        time_min = 240
+        time_min = 640
     shell:
      """
      zcat {input.r1} > {output.r1}
