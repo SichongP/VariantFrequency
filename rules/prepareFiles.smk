@@ -75,11 +75,12 @@ rule getFASTQ:
     resources:
         mem_mb = 3000,
         cpus = 1,
-        time_min = 600,
+        time_min = 1200,
         download = 1
     shell:
      """
      bin/enaBrowserTools-1.6/python3/enaDataGet -f fastq -d {params.outDir} {wildcards.run}
+     gzip -t {output}
      """
      
 rule mergeFASTQ:
