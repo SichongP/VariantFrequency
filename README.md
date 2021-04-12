@@ -52,11 +52,11 @@ To generate an accession file, simply run: `./ENA_curl.sh > data/accessions.tsv`
 
 To start the Snakemake workflow on a local machine or a dedicated server with Conda:
 ```
-snakemake --cores n_cores --use-conda
+snakemake --cores n_cores --use-conda &> log.txt
 ```
 Without Conda:
 ```
-snakemake --cores n_cores
+snakemake --cores n_cores &> log.txt
 ```
 `n_cores` is the number of threads Snakemake is allowed to use for this workflow.
 
@@ -102,4 +102,8 @@ and finally:
 snakemake --cores n_cores --use-conda --batch genotypeGVCF=3/3
 ```
 
-
+### Troubleshooting
+1. The workflow failed
+   Snakemake will report when a job fails. Look for error message in the snakemake output (log.txt). There are different typical suspects when some of the rules fail. See more details below.
+2. The rule getFASTQ fails:
+    This is usually because the connection to ENA database is unstable or interrupted. This can be seen as the job will report errors along the lines of "failed to download xxx" Reruning the workflow will usually fix this issue. Some other reasons for this issue could be that certain accession doesn't have paired-end fastq files available. This should also be reported in the error message. It is recommended to then remove those accessions from `accessions.tsv` file.
